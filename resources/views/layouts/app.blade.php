@@ -1,37 +1,51 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <title>Journal App</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ config('app.name', 'Journal App') }}</title>
+
+    <!-- Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen">
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
 
-    <nav class="bg-white dark:bg-gray-800 shadow">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-teal-600">📝 Journal</h1>
-            @auth
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('journals.index') }}" class="hover:underline">Home</a>
-                    <a href="{{ route('journals.create') }}" class="hover:underline">Create</a>
-                    <form action="{{ route('logout') }}" method="POST">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="{{ route('journals.index') }}" class="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-200">
+                📘 Journal App
+            </a>
+            <div class="space-x-4">
+                @auth
+                    <span class="text-gray-700">Hi, {{ auth()->user()->name }}!</span>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button type="submit" class="text-red-500 hover:underline">Logout</button>
+                        <button type="submit" class="text-red-600 hover:text-red-800 font-semibold transition duration-200">
+                            Logout
+                        </button>
                     </form>
-                </div>
-            @endauth
-            @guest
-                <div class="flex gap-4">
-                    <a href="{{ route('login') }}" class="hover:underline">Login</a>
-                    <a href="{{ route('register') }}" class="hover:underline">Register</a>
-                </div>
-            @endguest
+                @else
+                    <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-800 font-medium transition duration-200">
+                        Login
+                    </a>
+                    <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-800 font-medium transition duration-200">
+                        Register
+                    </a>
+                @endauth
+            </div>
         </div>
     </nav>
 
-    <main class="py-8 px-4 max-w-4xl mx-auto">
+    <!-- Page Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
         @yield('content')
     </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t text-center text-gray-500 py-4 text-sm">
+        &copy; {{ now()->year }} Journal App. All rights reserved.
+    </footer>
 
 </body>
 </html>
